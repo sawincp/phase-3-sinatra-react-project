@@ -19,6 +19,4 @@ puts "🌱 Seeding..."
     end
 
 
-
-
 puts "✅ Done seeding!"
