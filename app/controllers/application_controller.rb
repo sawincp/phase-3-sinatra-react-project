@@ -6,7 +6,15 @@ class ApplicationController < Sinatra::Base
     movies = Movie.all
     movies.to_json(include: :reviews)
     # movies.to_json
-   
+  end
+
+  get '/movies/:id' do
+    movie = Movie.find_by(id: param[:id])
+    if movie
+      movie.to_json(include: :reviews)
+    else
+      "404 - Movie not Found"
+    end
   end
 
 
