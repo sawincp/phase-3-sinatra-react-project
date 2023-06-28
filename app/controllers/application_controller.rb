@@ -9,7 +9,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/movies/:id' do
-    movie = Movie.find_by(id: param[:id])
+    movie = Movie.find_by(id: params[:id])
     if movie
       movie.to_json(include: :reviews)
     else
