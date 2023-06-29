@@ -1,21 +1,38 @@
 class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
   
-  # Add your routes here
+  # Movie Routes
+  
   get "/movies" do
     movies = Movie.all
     movies.to_json(include: :reviews)
-    # movies.to_json
   end
 
   get '/movies/:id' do
-    movie = Movie.find_by(id: params[:id])
-    if movie
-      movie.to_json(include: :reviews)
-    else
-      "404 - Movie not Found"
-    end
+    movie = Movie.find(params[:id])
+    movie.to_json(include: :reviews)
   end
 
+  #Review Routes
 
+  get '/reviews' do 
+    reviews = Review.all
+    reviews.to_json
+  end
+
+  post '/reviews' do
+    review = Review.create(
+      score: params[:score],
+      comment: params[:comment],
+      movie_id: params[:movie_id]
+    )
+    review.to_json
+  end
+
+  delete '/reviews/:id' do
+    review = Review.find(params[:id])
+    review.destroy
+    review.to_json
+  end
+  
 end
