@@ -13,7 +13,7 @@ class ApplicationController < Sinatra::Base
     movie.to_json(include: :reviews)
   end
 
-  #Review Routes
+  # Review Routes
 
   get '/reviews' do 
     reviews = Review.all
@@ -29,10 +29,23 @@ class ApplicationController < Sinatra::Base
     review.to_json
   end
 
+  patch '/reviews/:id' do
+    review = Review.find(params[:id])
+    if review
+      review.update(
+        score: params[:score],
+        comment: params[:comment]
+      )
+      review.to_json
+    else
+      status 404
+      { error: "Review not found" }.to_json
+    end
+  end
+
   delete '/reviews/:id' do
     review = Review.find(params[:id])
     review.destroy
     review.to_json
   end
-  
 end
