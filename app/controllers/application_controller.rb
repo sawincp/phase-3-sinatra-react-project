@@ -4,33 +4,24 @@ class ApplicationController < Sinatra::Base
   # Movie Routes
   
   get "/movies" do
-    movies = Movie.all
+    movies = Movie.all.includes(:reviews)
     movies.to_json(include: :reviews)
   end
 
-  get '/movies/:id' do
-    movie = Movie.find(params[:id])
-    movie.to_json(include: :reviews)
-  end
 
   # Review Routes
 
-  get '/reviews' do 
-    reviews = Review.all
-    reviews.to_json
-  end
-
   post '/reviews' do
-    review = Review.create(
+    movie = Movie.find(params[:movie_id])
+    review = movie.reviews.create(
       score: params[:score],
-      comment: params[:comment],
-      movie_id: params[:movie_id]
+      comment: params[:comment]
     )
     review.to_json
   end
 
   patch '/reviews/:id' do
-    review = Review.find(params[:id])
+    review = Review.find_by(id: params[:id])
     if review
       review.update(
         score: params[:score],
@@ -46,6 +37,5 @@ class ApplicationController < Sinatra::Base
   delete '/reviews/:id' do
     review = Review.find(params[:id])
     review.destroy
-    review.to_json
   end
 end
